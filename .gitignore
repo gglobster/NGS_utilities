@@ -1,0 +1,9 @@
+
+.DS_Store
+
+.idea/*
+.idea/**
+data/*
+data/**
+
+libs.pyc
