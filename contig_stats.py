@@ -64,7 +64,7 @@ ax2.bar(ind+width*2, n50s, width, color='blue')
 
 ax1.set_title('Basic assembly statistics')
 ax1.set_ylabel('Number of contigs')
-ax2.set_ylabel('N50 contig size')
+ax2.set_ylabel('N50 contig size (kb)')
 
 plt.show()
 
