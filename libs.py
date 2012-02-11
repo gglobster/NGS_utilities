@@ -1,6 +1,8 @@
 import re
+import subprocess
 from os import listdir
-from Bio import SeqIO
+from Bio import SeqIO, GenBank
+from Bio.Alphabet import generic_dna
 from os import path, makedirs
 
 def ensure_dir(dir_list):
@@ -29,6 +31,22 @@ def load_multifasta(seqfile):
         assert record.id
     return fasta_list
 
+def load_fasta(seqfile):
+    """Load single-record Fasta file."""
+    input_handle = open(seqfile, 'rU')
+    fasta_record = SeqIO.read(input_handle, 'fasta')
+    assert fasta_record.id
+    input_handle.close()
+    return fasta_record
+
+def load_genbank(seqfile):
+    """Load single-record GenBank file."""
+    parser = GenBank.FeatureParser()
+    input_handle = open(seqfile, 'rU')
+    gb_record = parser.parse(input_handle)
+    input_handle.close()
+    return gb_record
+
 def from_dir(ori_dir, pattern):
     """Load filenames in a directory using a regex."""
     # get directory contents
@@ -39,3 +57,53 @@ def from_dir(ori_dir, pattern):
         if match:
             filenames.append(item)
     return filenames
+
+def write_genbank(filename, seqrecords):
+    """Write GenBank file."""
+    output_handle = open(filename, 'w')
+    counter = SeqIO.write(seqrecords, output_handle, 'genbank')
+    output_handle.close()
+    return counter
+    
+def write_fasta(filename, seqrecords):
+    """Write Fasta file."""
+    output_handle = open(filename, 'w')
+    count = SeqIO.write(seqrecords, output_handle, 'fasta')
+    output_handle.close()
+    return count
+
+def fas2gbk(fas_file):
+    """Convert a FastA file to Genbank format."""
+    record = load_fasta(fas_file)
+    gbk_file = fas_file[:fas_file.find('.fas')]+'.gbk'
+#    record.name = rec_name
+#    record.id = rec_name
+    record.seq.alphabet = generic_dna
+    write_genbank(gbk_file, record)
+    return gbk_file
+
+def gbk2fas(gbk_file):
+    """Convert a FastA file to Genbank format."""
+    record = load_genbank(gbk_file)
+    fas_file = gbk_file[:gbk_file.find('.gbk')]+'.fas'
+#    record.name = rec_name
+#    record.id = rec_name
+    write_fasta(gbk_file, record)
+    return fas_file
+
+def train_prodigal(seq_file, training_file, mode):
+    """Train Prodigal on the entire dataset."""
+    cline = "prodigal "+mode+" -i "+seq_file+" -t "+training_file
+    child = subprocess.Popen(str(cline), stdout=subprocess.PIPE, shell=True)
+    output, error = child.communicate()
+    return output
+
+def run_prodigal(in_file, an_gbk, an_aa, trn_file, mode):
+    """Annotate sequence records individually using Prodigal."""
+    cline = "prodigal "+mode+" -i "+in_file\
+                            +" -o "+an_gbk\
+                            +" -a "+an_aa\
+                            +" -t "+trn_file
+    child = subprocess.Popen(str(cline), stdout=subprocess.PIPE, shell=True)
+    output, error = child.communicate()
+    return output
