@@ -35,8 +35,8 @@ for filename in filenames:
         record = load_genbank(gbk_file)
 
     # run prediction
-    annot_aa = annot_aa_dir+rec_name+"_aa.fas"
-    annot_gbk = annot_gbk_dir+rec_name+"_aa.gbk"
+    annot_aa = annot_aa_dir+rec_name+"_ann.fas"
+    annot_gbk = annot_gbk_dir+rec_name+"_ann.gbk"
     if not path.exists(trn_file):
         train_prodigal(fas_file, trn_file, "-q")
     if not path.exists(annot_aa):
@@ -74,7 +74,7 @@ for filename in filenames:
     separator = "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN"
     regex = re.compile(separator, re.IGNORECASE)
     spacers = [match.start() for match in regex.finditer(str(record.seq))]
-    print spacers
+    #print spacers
     for spacer in spacers:
         space_loc = FeatureLocation(spacer, spacer+100)
         feature = SeqFeature(location=space_loc,

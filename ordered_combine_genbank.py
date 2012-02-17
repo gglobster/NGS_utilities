@@ -10,22 +10,40 @@ destin_file = origin_dir+argv[2]+".gbk"
 base_name = argv[3]
 
 # adapt this part
-order = [(22, 0), (4, 0), (57, 1), (43, 1), (64, 0), (18, 0), (54, 0), (36, 1), (20, 1), (2, 1), (40, 1), (17, 1), (35, 1), (38, 1), (37, 1), (55, 1), (19, 1), (47, 1), (11, 0), (46, 0), (61, 0), (41, 1), (15, 0), (1, 1), (5, 1), (6, 0), (13, 1), (8, 0), (23, 0), (16, 1), (10, 0), (60, 0), (14, 0), (42, 0), (39, 0), (48, 0), (9, 1), (21, 0), (3, 1), (58, 1), (32, 0)]
+order = [(7,0), (17,1), (15,0), (16,1), (11,0), (6,0), (5,0), (1,0), (2,0), (3,0), (9,0), (13,0), (10,0), (4,0), (8,0), (12,0)]
 
 filename = origin_dir+base_name+str(order[0][0])+".fas"
 record = load_fasta(filename)
+
 if order[0][1]:
     record = record.reverse_complement()
+    c_note = '_RC'
+else:
+    c_note = ''
+
+space_loc = FeatureLocation(0, len(record.seq))
+quals = {'locus_tag': 'ctg_'+str(order[0][0])+c_note}
+feature = SeqFeature(location=space_loc, type='contig',
+                     id='ctg_'+str(order[0][0])+c_note, qualifiers=quals)
+record.features.append(feature)
+
+c_note = ''
 
 for index in order[1:]:
     filename = origin_dir+base_name+str(index[0])+".fas"
     new_rec = load_fasta(filename)
-    space_loc = FeatureLocation(len(record.seq),
-                                len(record.seq)+len(new_rec.seq))
-    feature = SeqFeature(location=space_loc, type='contig', id=new_rec.id)
-    record.features.append(feature)
     if index[1]:
         new_rec = new_rec.reverse_complement()
+        c_note = '_RC'
+    else:
+        c_note = ''
+    quals = {'locus_tag': 'ctg_'+str(index[0])+c_note}
+    space_loc = FeatureLocation(len(record.seq),
+                                len(record.seq)+len(new_rec.seq))
+    feature = SeqFeature(location=space_loc, type='contig',
+                         id='ctg_'+str(index[0])+c_note, qualifiers=quals)
+    record.features.append(feature)
+
     record += new_rec
     record += "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN"
 
@@ -34,3 +52,4 @@ record.name = argv[2]
 record.seq.alphabet = generic_dna
 
 write_genbank(destin_file, record)
+

@@ -1,9 +1,12 @@
 import re
 import subprocess
-from os import listdir
+from os import path, makedirs, listdir
 from Bio import SeqIO, GenBank
+from Bio.Blast import NCBIWWW
 from Bio.Alphabet import generic_dna
-from os import path, makedirs
+from Bio.Blast.Applications import NcbiblastnCommandline, \
+    NcbirpsblastCommandline, NcbiblastpCommandline, NcbitblastxCommandline, \
+    NcbiblastxCommandline, NcbitblastnCommandline
 
 def ensure_dir(dir_list):
     """Check that the directory exists; if not, create it."""
@@ -107,3 +110,82 @@ def run_prodigal(in_file, an_gbk, an_aa, trn_file, mode):
     child = subprocess.Popen(str(cline), stdout=subprocess.PIPE, shell=True)
     output, error = child.communicate()
     return output
+
+def make_blastDB(name, infile, db_type):
+    """Make BLAST database from FASTA input file."""
+    cline = "makeblastdb -in "+ infile +" -dbtype "+ db_type +" -title "+  \
+            infile +" -out "+ name +" -parse_seqids"
+    child = subprocess.Popen(str(cline), stdout=subprocess.PIPE, shell=True)
+    output, error = child.communicate()
+    return output
+
+def local_blastn_2file(query_file, dbfile_path, outfile, prefs):
+    """Perform blastn against local database."""
+    cline = NcbiblastnCommandline(query=query_file,
+                                  db=dbfile_path,
+                                  out=outfile,
+                                  evalue=prefs['evalue'],
+                                  outfmt=prefs['outfmt_pref'])
+    child = subprocess.Popen(str(cline), stdout=subprocess.PIPE, shell=True)
+    output, error = child.communicate() # forces the main script to wait
+
+def local_blastp_2file(query_file, dbfile_path, outfile, prefs):
+    """Perform blastp against local database."""
+    cline = NcbiblastpCommandline(query=query_file,
+                                  db=dbfile_path,
+                                  out=outfile,
+                                  evalue=prefs['evalue'],
+                                  outfmt=5) # must output XML!
+    child = subprocess.Popen(str(cline), stdout=subprocess.PIPE, shell=True)
+    output, error = child.communicate() # forces the main script to wait
+
+def local_tblastx_2file(query_file, dbfile_path, outfile, prefs):
+    """Perform blastx against local database."""
+    cline = NcbitblastxCommandline(query=query_file,
+                                  db=dbfile_path,
+                                  out=outfile,
+                                  evalue=prefs['evalue'],
+                                  outfmt=prefs['outfmt_pref'])
+    child = subprocess.Popen(str(cline), stdout=subprocess.PIPE, shell=True)
+    output, error = child.communicate() # forces the main script to wait
+
+def local_tblastn_2file(query_file, dbfile_path, outfile, prefs):
+    """Perform blastx against local database."""
+    cline = NcbitblastnCommandline(query=query_file,
+                                  db=dbfile_path,
+                                  out=outfile,
+                                  evalue=prefs['evalue'],
+                                  outfmt=prefs['outfmt_pref'])
+    child = subprocess.Popen(str(cline), stdout=subprocess.PIPE, shell=True)
+    output, error = child.communicate() # forces the main script to wait
+
+def local_blastx_2file(query_file, dbfile_path, outfile, prefs):
+    """Perform blastx against local database."""
+    cline = NcbiblastxCommandline(query=query_file,
+                                  db=dbfile_path,
+                                  out=outfile,
+                                  evalue=prefs['evalue'],
+                                  outfmt=prefs['outfmt_pref'])
+    child = subprocess.Popen(str(cline), stdout=subprocess.PIPE, shell=True)
+    output, error = child.communicate() # forces the main script to wait
+
+def local_rpsblast_2file(query_file, dbfile_path, outfile, prefs):
+    """Perform RPS Blast against local database."""
+    cline = NcbirpsblastCommandline(query=query_file,
+                                  db=dbfile_path,
+                                  out=outfile,
+                                  evalue=prefs['evalue'],
+                                  outfmt=5) # must output XML!
+    child = subprocess.Popen(str(cline), stdout=subprocess.PIPE, shell=True)
+    output, error = child.communicate() # forces the main script to wait
+
+def remote_blastp_2file(query_string, database, outfile, evalue):
+    """Perform blastp against remote database."""
+    result_handle = NCBIWWW.qblast('blastp',
+                                   database,
+                                   query_string,
+                                   expect=evalue)
+    save_file = open(outfile, "w")
+    save_file.write(result_handle.read())
+    save_file.close()
+    result_handle.close()
