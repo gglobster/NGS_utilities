@@ -1,4 +1,5 @@
 import re
+import numpy
 import subprocess
 from os import path, makedirs, listdir
 from Bio import SeqIO, GenBank
@@ -189,3 +190,34 @@ def remote_blastp_2file(query_string, database, outfile, evalue):
     save_file.write(result_handle.read())
     save_file.close()
     result_handle.close()
+
+def read_array(filename, dtype, separator='\t'):
+    # From Numpy cookbook
+    """ Read a file with an arbitrary number of columns.
+        The type of data in each column is arbitrary
+        It will be cast to the given dtype at runtime
+    """
+    cast = numpy.cast
+    data = [[] for dummy in xrange(len(dtype))]
+    for line in open(filename, 'r'):
+        fields = line.strip().split(separator)
+        for i, number in enumerate(fields):
+            data[i].append(number)
+    for i in xrange(len(dtype)):
+        #print data[i]
+        data[i] = cast[dtype[i]](data[i])
+    return numpy.rec.array(data, dtype=dtype)
+
+# Blast results arrays datatypes
+blast_dtypes = numpy.dtype([('query', 'S16'),
+                           ('dbhit', 'S32'),
+                           ('idp', 'float'),
+                           ('mlen', 'uint8'),
+                           ('mms', 'uint8'),
+                           ('gaps', 'uint8'),
+                           ('q_start', 'uint32'),
+                           ('q_end', 'uint32'),
+                           ('r_start', 'uint32'),
+                           ('r_end', 'uint32'),
+                           ('evalue', 'S5'),
+                           ('bitscore', 'float')])

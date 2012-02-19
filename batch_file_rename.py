@@ -5,7 +5,6 @@ from sys import argv
 from libs import from_dir, ensure_dir
 from shutil import copyfile
 
-
 origin_dir = "data/"+argv[1]
 destin_dir = "data/"+argv[2]+"/"
 prefix = argv[3]
