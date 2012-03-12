@@ -1,4 +1,4 @@
-# script to rename contigs in multifasta files
+# script to translate sequences in multifasta files into proteins
 
 from sys import argv
 from libs import load_multifasta, write_fasta

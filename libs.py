@@ -3,7 +3,11 @@ import numpy
 import subprocess
 from os import path, makedirs, listdir
 from Bio import SeqIO, GenBank
+<<<<<<< HEAD
 from Bio.Blast import NCBIWWW
+=======
+from Bio.Blast import NCBIWWW, NCBIXML
+>>>>>>> massive update
 from Bio.Alphabet import generic_dna
 from Bio.Blast.Applications import NcbiblastnCommandline, \
     NcbirpsblastCommandline, NcbiblastpCommandline, NcbitblastxCommandline, \
@@ -68,7 +72,7 @@ def write_genbank(filename, seqrecords):
     counter = SeqIO.write(seqrecords, output_handle, 'genbank')
     output_handle.close()
     return counter
-    
+
 def write_fasta(filename, seqrecords):
     """Write Fasta file."""
     output_handle = open(filename, 'w')
@@ -112,6 +116,23 @@ def run_prodigal(in_file, an_gbk, an_aa, trn_file, mode):
     output, error = child.communicate()
     return output
 
+<<<<<<< HEAD
+=======
+def collect_cogs(blast_out):
+    """Collect hits from Blast XML (not just for COGs anymore)."""
+    results = {}
+    blast_records = NCBIXML.parse(open(blast_out))
+    for record in blast_records:
+        rec_key = record.query_id
+        results[rec_key+'_def'] = record.query
+        if record.alignments: # ignores searches with no hits
+            top_hit = record.alignments[0]
+            results[rec_key] = top_hit.title
+        else:
+            results[rec_key] = 'no match'
+    return results
+
+>>>>>>> massive update
 def make_blastDB(name, infile, db_type):
     """Make BLAST database from FASTA input file."""
     cline = "makeblastdb -in "+ infile +" -dbtype "+ db_type +" -title "+  \
@@ -141,7 +162,11 @@ def local_blastp_2file(query_file, dbfile_path, outfile, prefs):
     output, error = child.communicate() # forces the main script to wait
 
 def local_tblastx_2file(query_file, dbfile_path, outfile, prefs):
+<<<<<<< HEAD
     """Perform blastx against local database."""
+=======
+    """Perform tblastx against local database."""
+>>>>>>> massive update
     cline = NcbitblastxCommandline(query=query_file,
                                   db=dbfile_path,
                                   out=outfile,
@@ -151,7 +176,11 @@ def local_tblastx_2file(query_file, dbfile_path, outfile, prefs):
     output, error = child.communicate() # forces the main script to wait
 
 def local_tblastn_2file(query_file, dbfile_path, outfile, prefs):
+<<<<<<< HEAD
     """Perform blastx against local database."""
+=======
+    """Perform tblastn against local database."""
+>>>>>>> massive update
     cline = NcbitblastnCommandline(query=query_file,
                                   db=dbfile_path,
                                   out=outfile,
@@ -159,6 +188,10 @@ def local_tblastn_2file(query_file, dbfile_path, outfile, prefs):
                                   outfmt=prefs['outfmt_pref'])
     child = subprocess.Popen(str(cline), stdout=subprocess.PIPE, shell=True)
     output, error = child.communicate() # forces the main script to wait
+<<<<<<< HEAD
+=======
+    print output
+>>>>>>> massive update
 
 def local_blastx_2file(query_file, dbfile_path, outfile, prefs):
     """Perform blastx against local database."""
@@ -220,4 +253,8 @@ blast_dtypes = numpy.dtype([('query', 'S16'),
                            ('r_start', 'uint32'),
                            ('r_end', 'uint32'),
                            ('evalue', 'S5'),
+<<<<<<< HEAD
                            ('bitscore', 'float')])
+=======
+                           ('bitscore', 'float')])
+>>>>>>> massive update

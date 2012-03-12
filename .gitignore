@@ -3,7 +3,11 @@
 
 .idea/*
 .idea/**
+
 data/*
 data/**
+
+versions/*
+versions/**
 
 libs.pyc

@@ -14,15 +14,15 @@ order = [(22, 0), (4, 0), (57, 1), (43, 1), (64, 0), (18, 0), (54, 0), (36, 1), 
 filename = origin_dir+base_name+str(order[0][0])+".fas"
 record = load_fasta(filename)
 if order[0][1]:
-	record = record.reverse_complement()
+    record = record.reverse_complement()
 
 for index in order[1:]:
-	filename = origin_dir+base_name+str(index[0])+".fas"
-	new_rec = load_fasta(filename)
-	if index[1]:
-		new_rec = new_rec.reverse_complement()
-	record += new_rec
-	record += "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN"
+    filename = origin_dir+base_name+str(index[0])+".fas"
+    new_rec = load_fasta(filename)
+    if index[1]:
+        new_rec = new_rec.reverse_complement()
+    record += new_rec
+    record += "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN"
 
 record.id = argv[2]
 
