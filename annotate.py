@@ -12,7 +12,11 @@ from Bio.Alphabet import generic_dna
 origin_dir = "data/"+argv[1]+"/"
 seq_dir = origin_dir+argv[2]+"/"
 file_ext = argv[3]
-trim_ids = argv[4]
+
+if len(argv) < 5:
+    trim_ids = ''
+else:
+    trim_ids = argv[4]
 
 blast_dir = origin_dir+"blast/"
 prot_db = "data/ref_dbs/Bacteria_prot"
