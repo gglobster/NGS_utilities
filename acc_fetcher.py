@@ -64,6 +64,7 @@ counter = 0
 for rec_id in rec_list :
 
     print rec_id,
+    counter += 1
 
     while True:
         try:
@@ -106,7 +107,7 @@ for rec_id in rec_list :
                         ctg_id = base_code+'0'+str(ctg_count)
                     # fetch contig record
                     try:
-                        counter = EFetcher(ctg_id, seqdir)
+                        fname = EFetcher(ctg_id, seqdir)
                     except Exception:
                         print "Error retrieving record"
                         break

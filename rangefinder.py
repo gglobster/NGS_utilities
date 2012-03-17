@@ -5,7 +5,7 @@ from os import path
 from sys import argv
 from libs import make_blastDB, local_tblastn_2file, local_tblastx_2file, \
     local_blastn_2file, load_genbank, load_multifasta, write_fasta, \
-    ensure_dir, from_dir
+    ensure_dir, from_dir, read_array, blast_dtypes
 
 data_dir = "data/"+argv[1]+"/"
 dir_in = data_dir+argv[2]+"/"
@@ -27,8 +27,9 @@ queries = load_multifasta(infile)
 filenames = from_dir(dir_in, re.compile(r'.*\.'+file_ext))
 
 for filename in filenames:
+
     rec_name = filename[:filename.find("."+file_ext)]
-    print '.',
+    print rec_name,
 
     genome_path = dir_in+filename
     dbfile_path = "data/blast_db/"+rec_name
@@ -70,7 +71,30 @@ for filename in filenames:
             print "failed to blast"
             break
         else:
-            print "OK"
+            print "finding range,"
+            try:
+                # load blast results from file
+                rec_array = read_array(outfile, blast_dtypes)
+            except IOError:
+                print "failed to load blast results"
+                break
+            except Exception:
+                print "failed to load blast results (unknown error)"
+                break
+            else:
+                print rec_array[0]
+                # take first line (= best hit) only
+                try:
+                    line = rec_array[0]
+                except IndexError:
+                    print "empty blast results"
+                    break
+                if line[8] < line[9]:
+                    q_start, q_stop = line[8]-1, line[9]
+                    rev_flag = False
+                else:
+                    q_start, q_stop = line[9]-1, line[8]
+                    rev_flag = True
             break
 
 # TODO: glomp results and output range
