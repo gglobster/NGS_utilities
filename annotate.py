@@ -75,7 +75,7 @@ for filename in filenames:
         start_pos = int(match.group(1))
         end_pos = int(match.group(2))
         strand_pos = int(match.group(3))
-        feat_loc = FeatureLocation(start_pos, end_pos)
+        feat_loc = FeatureLocation(start_pos-1, end_pos) # adjust for 0-index
         l_tag = rec_name+"_"+str(counter)
         # consolidation feature annotations
         quals = {'note': defline, 'locus_tag': l_tag,

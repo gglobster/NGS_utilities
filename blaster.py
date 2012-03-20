@@ -51,8 +51,7 @@ for genome in genome_list:
                 outfile = blast_out+genome['name']+".txt"
                 prefs = {'evalue': 0.001, 'outfmt_pref': 6}
                 print "blasting,",
-                local_tblastn_2file(infile, dbfile_path, outfile,
-                                    prefs)
+                local_tblastn_2file(infile, dbfile_path, outfile, prefs)
             except Exception:
                 print "failed to blast"
                 break

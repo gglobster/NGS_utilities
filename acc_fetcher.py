@@ -4,7 +4,7 @@
 
 from sys import argv
 from Bio import Entrez
-from libs import ensure_dir, load_genbank
+from libs import ensure_dir, load_genbank, write_fasta
 
 # Tell NCBI who we are
 Entrez.email	= "Geraldine_VdAuwera@harvard.hms.edu"
@@ -89,8 +89,10 @@ for rec_id in rec_list :
                     print "Error loading", fname
                     break
 
-                base_code = stub.annotations['wgs'][0][:10]
-                ctg_num = int(stub.annotations['wgs'][-1][10:])
+                base_code = stub.annotations['wgs'][0][:10] # 7 if not NZ_
+                ctg_num = int(stub.annotations['wgs'][-1][10:]) # 7
+
+                records = []
 
                 # fetch contig records
                 ctg_count = 0
@@ -107,10 +109,17 @@ for rec_id in rec_list :
                         ctg_id = base_code+'0'+str(ctg_count)
                     # fetch contig record
                     try:
-                        fname = EFetcher(ctg_id, seqdir)
+                        fname = EFetcher(ctg_id[3:], seqdir) # 3 if not NZ_
                     except Exception:
                         print "Error retrieving record"
-                        break
+                    else:
+                        try:
+                            records.append(load_genbank(fname))
+                        except Exception:
+                            print "Error loading record"
+
+                write_fasta(data_dir+rec_id+".fas", records)
+
             print "OK"
             break
 

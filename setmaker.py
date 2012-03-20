@@ -2,7 +2,7 @@
 
 import re
 from sys import argv
-from libs import from_dir, load_fasta, load_genbank
+from libs import from_dir, load_fasta, load_multifasta, load_genbank
 
 data_dir = "data/"+argv[1]+"/"
 seq_dir = data_dir+argv[2]+"/"
@@ -36,18 +36,23 @@ for filename in filenames:
                 seq_format = 'gbk'
 
         elif filename.find(".fas") > 0:
-            # process fasta (reject mfas as bad format)
+            # process fasta (for mfas, load first record)
             try:
                 record = load_fasta(seq_dir+filename)
             except IOError:
-                print "failed to load Fasta file"
+                print "failed to load Fasta file as single-record file"
                 break
             except Exception:
-                print "failed to handle Fasta file"
-                break
-            else:
-                print "...",
-                seq_format = 'fas'
+                try:
+                    record = load_multifasta(seq_dir+filename)[0]
+                except IOError:
+                    print "failed to load Fasta file as multi-record file"
+                    break
+                except Exception:
+                    print "failed to handle Fasta file"
+                    break
+            print "...",
+            seq_format = 'fas'
 
         else:
             # reject as bad format
@@ -60,10 +65,11 @@ for filename in filenames:
 
         line = "".join(["{'name': '", record.id,
                         "', 'file': '", filename,
-                        "', 'format': '", seq_format,
+                        "', 'input': '", seq_format,
                         "', 'order': ", str(counter),
-                        ", 'nudge': 0, 'offset': 0},"])
-
+                        ", 'nudge': 0, 'offset': (0,0),'ignore': (0, 0)},"])
+                        # TODO: edit this last once backbonomist mapping is
+                        # TODO: fixed like bbmapper
         set_lines.append(line)
         counter +=1
 
