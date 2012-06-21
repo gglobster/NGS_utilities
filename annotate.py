@@ -3,7 +3,7 @@
 import re
 from os import path
 from sys import argv
-from libs import from_dir, ensure_dir, fas2gbk, gbk2fas, write_genbank, \
+from libs.common import from_dir, ensure_dir, fas2gbk, gbk2fas, write_genbank, \
     load_genbank, train_prodigal, run_prodigal, load_multifasta, \
     local_blastp_2file, collect_cogs
 from Bio.SeqFeature import SeqFeature, FeatureLocation

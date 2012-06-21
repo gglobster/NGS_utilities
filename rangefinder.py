@@ -3,7 +3,7 @@
 import re
 from os import path
 from sys import argv
-from libs import make_blastDB, local_tblastn_2file, local_tblastx_2file, \
+from libs.common import make_blastDB, local_tblastn_2file, local_tblastx_2file, \
     local_blastn_2file, load_genbank, load_multifasta, write_fasta, \
     ensure_dir, from_dir, read_array, blast_dtypes
 

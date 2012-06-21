@@ -2,7 +2,7 @@
 
 from sys import argv
 from Bio.SeqRecord import SeqRecord
-from libs import read_array, blast_dtypes, load_fasta, write_fasta, ensure_dir
+from libs.common import read_array, blast_dtypes, load_fasta, write_fasta, ensure_dir
 
 data_dir = "data/"+argv[1]+"/"
 main_in = data_dir+argv[2]+"_results.txt"

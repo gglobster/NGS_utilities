@@ -2,7 +2,7 @@
 
 import re
 from sys import argv
-from libs import from_dir, load_fasta, load_multifasta, load_genbank
+from libs.common import from_dir, load_fasta, load_multifasta, load_genbank
 
 data_dir = "data/"+argv[1]+"/"
 seq_dir = data_dir+argv[2]+"/"
@@ -60,16 +60,15 @@ for filename in filenames:
             break
 
         if len(record) < int(min_size):
-            print "too short"
+            print "too short --", len(record)
             break
 
-        line = "".join(["{'name': '", record.id,
+        line = "".join(["\t{'name': '", record.id,
                         "', 'file': '", filename,
                         "', 'input': '", seq_format,
                         "', 'order': ", str(counter),
-                        ", 'nudge': 0, 'offset': (0,0),'ignore': (0, 0)},"])
-                        # TODO: edit this last once backbonomist mapping is
-                        # TODO: fixed like bbmapper
+                        ", 'nudge': 0, 'offset': 0,'ignore': (0, 0)},"])
+                        # TODO: edit to fit backbonomist or bbmapper
         set_lines.append(line)
         counter +=1
 

@@ -2,7 +2,7 @@
 
 import re
 from sys import argv
-from libs import load_multifasta, from_dir
+from libs.common import load_multifasta, from_dir
 import matplotlib.pyplot as plt
 import numpy as np
 

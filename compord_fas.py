@@ -1,8 +1,7 @@
 ## script to combine several fasta sequences into a single one in a specific order
 
-import re
 from sys import argv
-from libs import from_dir, load_fasta, write_fasta
+from libs.common import  load_fasta, write_fasta
 
 origin_dir = "data/"+argv[1]+"/"
 destin_file = origin_dir+argv[2]+".fas"

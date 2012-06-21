@@ -1,7 +1,7 @@
 ## script to unpack contigs
 
 from sys import argv
-from libs import ensure_dir, load_multifasta, load_fasta,load_genbank, \
+from libs.common import ensure_dir, load_multifasta, load_fasta,load_genbank, \
     write_fasta
 
 from genomes import all as genome_list

@@ -2,7 +2,7 @@
 
 import re
 from sys import argv
-from libs import from_dir, ensure_dir
+from libs.common import from_dir, ensure_dir
 from shutil import copyfile
 
 origin_dir = "data/"+argv[1]+"/"

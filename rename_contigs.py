@@ -2,7 +2,7 @@
 
 <<<<<<< HEAD
 from genomes import all as genomes
-from libs import load_multifasta, write_fasta
+from libs.common import load_multifasta, write_fasta
 
 for genome in genomes:
     print genome['file']
@@ -20,7 +20,7 @@ for genome in genomes:
     write_fasta(outfile_path, renamed)
 =======
 from sys import argv
-from libs import load_multifasta, write_fasta, ensure_dir
+from libs.common import load_multifasta, write_fasta, ensure_dir
 
 from genomes import all as genome_list
 

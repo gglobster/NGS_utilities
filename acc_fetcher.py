@@ -4,7 +4,7 @@
 
 from sys import argv
 from Bio import Entrez
-from libs import ensure_dir, load_genbank, write_fasta
+from libs.common import ensure_dir, load_genbank, write_fasta
 
 # Tell NCBI who we are
 Entrez.email	= "Geraldine_VdAuwera@harvard.hms.edu"

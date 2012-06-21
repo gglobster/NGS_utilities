@@ -4,7 +4,7 @@ import re
 from os import path
 from sys import argv
 from Bio.SeqRecord import SeqRecord
-from libs import from_dir, read_array, blast_dtypes, load_fasta, write_fasta
+from libs.common import from_dir, read_array, blast_dtypes, load_fasta, write_fasta
 
 data_dir = "data/"+argv[1]+"/"
 blast_out_dir = "data/"+argv[1]+"/blast_out/"

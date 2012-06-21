@@ -2,7 +2,7 @@
 
 import re
 from sys import argv
-from libs import from_dir, load_fasta, load_genbank, write_fasta
+from libs.common import from_dir, load_fasta, load_genbank, write_fasta
 
 origin_dir = "data/"+argv[1]
 destin_file = origin_dir+"/"+argv[2]+".fas"

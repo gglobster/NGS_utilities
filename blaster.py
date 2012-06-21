@@ -2,7 +2,7 @@
 
 from os import path
 from sys import argv
-from libs import make_blastDB, local_tblastn_2file, local_tblastx_2file, \
+from libs.common import make_blastDB, local_tblastn_2file,\
     load_genbank, write_fasta, ensure_dir
 
 from genomes import all as genome_list

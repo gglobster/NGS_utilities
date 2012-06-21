@@ -1,7 +1,7 @@
 # script to translate sequences in multifasta files into proteins
 
 from sys import argv
-from libs import load_multifasta, write_fasta
+from libs.common import load_multifasta, write_fasta
 from Bio.SeqRecord import SeqRecord
 
 origin_dir = "data/"+argv[1]+"/"

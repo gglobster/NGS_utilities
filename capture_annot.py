@@ -2,7 +2,7 @@
 
 import re
 from sys import argv
-from libs import load_genbank, write_fasta, ensure_dir, from_dir
+from libs.common import load_genbank, write_fasta, ensure_dir, from_dir
 
 data_dir = "data/"+argv[1]+"/"
 dir_in = "data/"+argv[2]+"/"
