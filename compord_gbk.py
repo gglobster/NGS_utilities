@@ -1,7 +1,7 @@
 ## script to combine several fasta sequences into a single one in a specific order
 
 from sys import argv
-from libs import load_fasta, write_genbank
+from libs.common import load_fasta, write_genbank
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 from Bio.Alphabet import generic_dna
 

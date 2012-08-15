@@ -2,7 +2,7 @@
 
 import re
 from sys import argv
-from libs import from_dir, ensure_dir, load_fasta, write_genbank
+from libs.common import from_dir, ensure_dir, load_fasta, write_genbank
 from Bio.Alphabet import generic_dna
 
 origin_dir = "data/"+argv[1]
@@ -22,5 +22,4 @@ for filename in filenames:
     record.id = rec_name
     record.seq.alphabet = generic_dna
     write_genbank(gbk_file, record)
-    
-    
+

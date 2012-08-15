@@ -4,7 +4,7 @@ import re
 from os import path
 from sys import argv
 from Bio.SeqRecord import SeqRecord
-from libs import from_dir, read_array, blast_dtypes, load_fasta, write_fasta
+from libs.common import from_dir, read_array, blast_dtypes, load_fasta, write_fasta
 
 data_dir = "data/"+argv[1]+"/"
 blast_out_dir = "data/"+argv[1]+"/blast_out/"
@@ -44,7 +44,7 @@ for filename in filenames:
             else:
                 q_start, q_stop = line[9]-1, line[8]
                 rev_flag = True
-            master_seq = load_fasta("data/contigs/"+subject+".fas")
+            master_seq = load_fasta("data/contigs_fas/"+subject+".fas")
             seq_bit = master_seq[q_start:q_stop]
             if rev_flag:
                 seq_bit = seq_bit.reverse_complement()
@@ -59,4 +59,4 @@ for query in records_dict.keys():
     write_fasta(seqfile_nt, records_dict[query])
 
 
-            
+
