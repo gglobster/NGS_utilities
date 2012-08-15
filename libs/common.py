@@ -9,6 +9,9 @@ from Bio.Blast.Applications import NcbiblastnCommandline, \
     NcbirpsblastCommandline, NcbiblastpCommandline, NcbitblastxCommandline, \
     NcbiblastxCommandline, NcbitblastnCommandline
 
+def add_nl_before_patt(m):
+    return m.group(1)+"\n"+m.group(3)
+
 def ensure_dir(dir_list):
     """Check that the directory exists; if not, create it."""
     for dir_path in dir_list:
@@ -112,7 +115,7 @@ def run_prodigal(in_file, an_gbk, an_aa, trn_file, mode):
     output, error = child.communicate()
     return output
 
-def collect_cogs(blast_out):
+def collect_tophit(blast_out):
     """Collect hits from Blast XML (not just for COGs anymore)."""
     results = {}
     blast_records = NCBIXML.parse(open(blast_out))
@@ -125,6 +128,20 @@ def collect_cogs(blast_out):
         else:
             results[rec_key] = 'no match'
     return results
+
+def collect_topNhits(blast_out, N):
+    """Collect top N hits from Blast XML."""
+    blast_records = NCBIXML.parse(open(blast_out))
+    top_hits = 'no record'
+    for record in blast_records:
+        if record.alignments: # ignores searches with no hits
+            if len(record.alignments)> N:
+                top_hits = record.alignments[0:N]
+            else:
+                top_hits = record.alignments[0:len(record.alignments)]
+        else:
+            top_hits = 'no match'
+    return top_hits
 
 def make_blastDB(name, infile, db_type):
     """Make BLAST database from FASTA input file."""
@@ -204,6 +221,7 @@ def remote_blastp_2file(query_string, database, outfile, evalue):
     save_file.write(result_handle.read())
     save_file.close()
     result_handle.close()
+    return outfile
 
 def read_array(filename, dtype, separator='\t'):
     # From Numpy cookbook
