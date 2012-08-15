@@ -3,7 +3,7 @@ import numpy
 import subprocess
 from os import path, makedirs, listdir
 from Bio import SeqIO, GenBank
-from Bio.Blast import NCBIWWW
+from Bio.Blast import NCBIWWW, NCBIXML
 from Bio.Alphabet import generic_dna
 from Bio.Blast.Applications import NcbiblastnCommandline, \
     NcbirpsblastCommandline, NcbiblastpCommandline, NcbitblastxCommandline, \
@@ -111,6 +111,20 @@ def run_prodigal(in_file, an_gbk, an_aa, trn_file, mode):
     child = subprocess.Popen(str(cline), stdout=subprocess.PIPE, shell=True)
     output, error = child.communicate()
     return output
+
+def collect_cogs(blast_out):
+    """Collect hits from Blast XML (not just for COGs anymore)."""
+    results = {}
+    blast_records = NCBIXML.parse(open(blast_out))
+    for record in blast_records:
+        rec_key = record.query_id
+        results[rec_key+'_def'] = record.query
+        if record.alignments: # ignores searches with no hits
+            top_hit = record.alignments[0]
+            results[rec_key] = top_hit.title
+        else:
+            results[rec_key] = 'no match'
+    return results
 
 def make_blastDB(name, infile, db_type):
     """Make BLAST database from FASTA input file."""
